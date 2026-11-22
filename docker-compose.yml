@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: assas-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: assas
+      POSTGRES_PASSWORD: assas_pass
+      POSTGRES_DB: assas
+    ports:
+      - "5432:5432"
+    volumes:
+      - assas_pgdata:/var/lib/postgresql/data
+
+  opensearch:
+    image: opensearchproject/opensearch:2.17.1
+    container_name: assas-opensearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - assas_osdata:/usr/share/opensearch/data
+
+volumes:
+  assas_pgdata:
+  assas_osdata:

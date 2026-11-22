@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+  <title>ASSAS | History</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0E0B08; color: #EDE3D3;
+    }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 40px; border-bottom: 1px solid #3A2A1E; background: #14100C;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 48px; height: 48px; filter: drop-shadow(0 0 8px rgba(201, 162, 77, .3)); }
+    header h1 { margin: 0; font-size: 26px; letter-spacing: 2px; color: #C9A24D; }
+    nav a { color: #8B6A4A; text-decoration: none; margin-left: 22px; font-size: 14px; }
+    nav a:hover, nav a.active { color: #C9A24D; }
+    main { padding: 30px 40px; }
+    h2 { font-size: 20px; margin: 0 0 14px; }
+    .card { background: #1A140F; border: 1px solid #3A2A1E; border-radius: 16px; padding: 22px; margin-bottom: 26px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; color: #C9A24D; font-weight: 600; padding: 10px 8px; border-bottom: 1px solid #3A2A1E; }
+    td { padding: 10px 8px; border-bottom: 1px solid #2A1F16; vertical-align: top; }
+    .pill { padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
+    .CRITICAL { background: #3B1414; color: #E8A39B; }
+    .HIGH { background: #3A2410; color: #E0A86A; }
+    .MEDIUM { background: #332A12; color: #D9C27A; }
+    .LOW { background: #1E2A18; color: #A8C08A; }
+    .filters a {
+      display: inline-block; margin: 0 8px 14px 0; padding: 6px 14px; border-radius: 99px;
+      border: 1px solid #3A2A1E; color: #8B6A4A; text-decoration: none; font-size: 13px;
+    }
+    .filters a.on { background: #C9A24D; color: #0E0B08; border-color: #C9A24D; }
+    .muted { color: #6E5640; }
+    .num { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="{{ url_for('static', filename='owl.png') }}" alt="ASSAS owl">
+      <h1>ASSAS</h1>
+    </div>
+    <nav>
+      <a href="{{ url_for('home') }}">Analyze</a>
+      <a href="{{ url_for('search') }}">Search</a>
+      <a href="{{ url_for('history') }}" class="active">History</a>
+      <a href="{{ url_for('logout') }}">Logout ({{ current_user.username }})</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Recent analyses</h2>
+      <table>
+        <tr><th>Date</th><th>File</th><th>Analyst</th><th>Total</th><th>Critical</th><th>High</th><th>Medium</th><th>Low</th></tr>
+        {% for a in analyses %}
+        <tr>
+          <td class="num">{{ a.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+          <td>{{ a.filename }}</td>
+          <td>{{ a.analyst or "-" }}</td>
+          <td class="num">{{ a.total }}</td>
+          <td class="num">{{ a.critical }}</td>
+          <td class="num">{{ a.high }}</td>
+          <td class="num">{{ a.medium }}</td>
+          <td class="num">{{ a.low }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="muted">No analysis yet. Upload a log file first.</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Stored alerts</h2>
+      <div class="filters">
+        <a href="{{ url_for('history') }}" class="{{ 'on' if not severity }}">All</a>
+        {% for level in ["CRITICAL", "HIGH", "MEDIUM", "LOW"] %}
+        <a href="{{ url_for('history', severity=level) }}" class="{{ 'on' if severity == level }}">{{ level | capitalize }}</a>
+        {% endfor %}
+      </div>
+      <table>
+        <tr><th>Event time</th><th>User</th><th>IP</th><th>Event</th><th>Severity</th><th>Reason</th><th>File</th></tr>
+        {% for al in alerts %}
+        <tr>
+          <td class="num">{{ al.event_time }}</td>
+          <td>{{ al.username }}</td>
+          <td class="num">{{ al.ip }}</td>
+          <td>{{ al.event }}</td>
+          <td><span class="pill {{ al.severity }}">{{ al.severity }}</span></td>
+          <td>{{ al.reason }}</td>
+          <td class="muted">{{ al.filename }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="muted">No alerts stored.</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+  </main>
+</body>
+</html>

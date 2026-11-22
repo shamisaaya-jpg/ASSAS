@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+  <title>ASSAS | Login</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 20% 10%, #2A1F16 0%, #14100C 45%, #0E0B08 100%);
+      color: #EDE3D3;
+    }
+    .card {
+      width: 100%; max-width: 400px; padding: 40px 36px;
+      background: #1A140F; border: 1px solid #3A2A1E; border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .logo { width: 64px; height: 64px; filter: drop-shadow(0 0 10px rgba(201, 162, 77, .35)); }
+    h1 { margin: 0; font-size: 30px; letter-spacing: 2px; color: #C9A24D; }
+    .tagline { margin: 0 0 28px; color: #8B6A4A; font-size: 14px; }
+    label { display: block; font-size: 13px; color: #8B6A4A; margin: 16px 0 6px; }
+    input {
+      width: 100%; padding: 12px 14px; border-radius: 10px; font-size: 15px;
+      background: #0E0B08; border: 1px solid #3A2A1E; color: #EDE3D3; outline: none;
+    }
+    input:focus { border-color: #C9A24D; box-shadow: 0 0 0 3px rgba(201, 162, 77, .2); }
+    button {
+      width: 100%; margin-top: 26px; padding: 13px; border: 0; border-radius: 10px; cursor: pointer;
+      font-size: 15px; font-weight: 600; color: #0E0B08; background: #C9A24D;
+    }
+    button:hover { background: #D9B65E; }
+    .error {
+      margin-bottom: 8px; padding: 10px 12px; border-radius: 10px; font-size: 14px;
+      background: #3B1414; color: #E8A39B; border: 1px solid #5A2A22;
+    }
+    .info {
+      margin-bottom: 8px; padding: 10px 12px; border-radius: 10px; font-size: 14px;
+      background: #2A2014; color: #EDE3D3; border: 1px solid #3A2A1E;
+    }
+    .foot { margin-top: 22px; text-align: center; font-size: 12px; color: #6E5640; }
+  </style>
+</head>
+<body>
+  <form class="card" method="post">
+    <div class="brand">
+      <img src="{{ url_for('static', filename='owl.png') }}" alt="ASSAS owl" class="logo">
+      <h1>ASSAS</h1>
+    </div>
+    <p class="tagline">Analyse, Surveillance et Supervision des Accès Suspects<br>3assas 3la les systèmes dyalk, nhar w lil</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}<div class="info">{{ message }}</div>{% endfor %}
+    {% endwith %}
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+    <label for="username">Username</label>
+    <input id="username" name="username" autocomplete="username" required autofocus>
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+    <button type="submit">Log in</button>
+    <p class="foot">Administrator access only</p>
+  </form>
+</body>
+</html>

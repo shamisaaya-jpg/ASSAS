@@ -1,0 +1,7 @@
+Nov 21 22:10:01 ubuntu sshd[1201]: Failed password for root from 192.168.56.10 port 51022 ssh2
+Nov 21 22:10:04 ubuntu sshd[1201]: Failed password for root from 192.168.56.10 port 51022 ssh2
+Nov 21 22:10:07 ubuntu sshd[1201]: Failed password for invalid user admin from 192.168.56.10 port 51030 ssh2
+Nov 21 22:10:10 ubuntu sshd[1201]: Failed password for root from 192.168.56.10 port 51034 ssh2
+Nov 21 22:10:13 ubuntu sshd[1201]: Failed password for root from 192.168.56.10 port 51040 ssh2
+Nov 21 22:10:20 ubuntu sshd[1210]: Accepted password for root from 192.168.56.10 port 51050 ssh2
+Nov 21 22:15:00 ubuntu sudo: pam_unix(sudo:auth): authentication failure; logname=aya uid=1000 euid=0 tty=/dev/pts/0 ruser=aya rhost=  user=aya

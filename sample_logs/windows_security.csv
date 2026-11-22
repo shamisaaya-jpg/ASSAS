@@ -1,0 +1,72 @@
+TimeCreated,EventID,User,IP,Computer,Message
+2026-11-21 08:33:02,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 08:55:07,4624,sara,192.168.56.22,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 09:30:48,4624,sara,192.168.56.22,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 10:28:19,4625,aya,192.168.56.1,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 10:28:27,4624,aya,192.168.56.1,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 11:10:39,4625,sara,192.168.56.22,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 11:10:47,4624,sara,192.168.56.22,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 11:28:49,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 11:40:10,4624,sara,192.168.56.22,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 12:03:02,4625,aya,192.168.56.1,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 12:03:10,4624,aya,192.168.56.1,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 12:28:45,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 12:38:09,4624,aya,192.168.56.1,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 13:05:37,4624,sara,192.168.56.22,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 13:36:07,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 13:40:26,4624,aya,192.168.56.1,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 14:01:12,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 14:20:56,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 14:25:14,4624,aya,192.168.56.1,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 15:02:02,4624,aya,192.168.56.1,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 15:14:07,4624,aya,192.168.56.1,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 16:40:20,4624,sara,192.168.56.22,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 16:45:33,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 17:05:27,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 17:48:59,4625,omar,192.168.56.21,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 17:49:07,4624,omar,192.168.56.21,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 18:06:00,4625,sara,192.168.56.22,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 18:06:08,4624,sara,192.168.56.22,WIN-PC01,An account was successfully logged on. Logon Type: 3
+2026-11-21 20:05:00,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:02,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:06,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:08,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:12,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:16,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:18,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:21,4625,admin,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:22,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:24,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:29,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:30,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:32,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:35,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:40,4625,admin,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:43,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:44,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:45,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:50,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:51,4625,admin,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:54,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:05:56,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:01,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:05,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:07,4625,admin,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:09,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:11,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:16,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:20,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:25,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:29,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:30,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:31,4625,admin,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:33,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:36,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:41,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:44,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:45,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:47,4625,guest,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:52,4625,Administrator,192.168.56.10,WIN-PC01,An account failed to log on. Failure Reason: Unknown user name or bad password.
+2026-11-21 20:06:59,4624,Administrator,192.168.56.10,WIN-PC01,An account was successfully logged on. Logon Type: 10
+2026-11-21 20:07:59,4720,backdoor,,WIN-PC01,A user account was created. New Account: Account Name: backdoor
+2026-11-21 20:08:19,4732,backdoor,,WIN-PC01,A member was added to a security-enabled local group. Group Name: Administrators

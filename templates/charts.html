@@ -1,0 +1,197 @@
+<!-- ASSAS dashboard charts: included from index.html -->
+<style>
+  .assas-dash { margin: 32px 0; color: #EDE3D3; font-family: inherit; }
+  .assas-dash h2 { font-size: 26px; margin: 0 0 6px; }
+  .assas-dash .sub { color: #8B6A4A; margin: 0 0 22px; }
+  .assas-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+  .assas-card {
+    background: #1A140F; border: 1px solid #3A2A1E; border-radius: 16px;
+    padding: 20px 22px; position: relative; overflow: hidden;
+    animation: assasRise .6s ease both;
+  }
+  .assas-card h3 { margin: 0 0 4px; font-size: 16px; color: #EDE3D3; }
+  .assas-card .hint { margin: 0 0 14px; font-size: 13px; color: #6E5640; }
+  .span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; }
+  .span-6 { grid-column: span 6; }   .span-4 { grid-column: span 4; }
+  .chart-box { position: relative; height: 280px; }
+  .chart-box.small { height: 240px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 18px; }
+  .kpi { background: #1A140F; border: 1px solid #3A2A1E; border-radius: 16px; padding: 18px 20px; animation: assasRise .5s ease both; }
+  .kpi .label { color: #8B6A4A; font-size: 13px; }
+  .kpi .value { font-size: 34px; font-weight: 700; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .kpi .value.gold { color: #C9A24D; } .kpi .value.red { color: #E8A39B; }
+  .kpi .value.green { color: #A8C08A; } .kpi .value.amber { color: #D9C27A; }
+  .meter { height: 6px; background: #2A1F16; border-radius: 99px; margin-top: 12px; overflow: hidden; }
+  .meter span { display: block; height: 100%; background: #C9A24D; border-radius: 99px; width: 0; transition: width 1.2s ease; }
+
+  .attacker { border-color: #5A2A22; background: #1F1310; }
+  .attacker .ip { font-size: 30px; font-weight: 700; color: #E8A39B; font-family: ui-monospace, monospace; margin: 10px 0 14px; }
+  .attacker .row { display: flex; justify-content: space-between; padding: 7px 0; border-top: 1px solid #3A2A1E; font-size: 14px; }
+  .attacker .row span:first-child { color: #8B6A4A; }
+  .pulse { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: #E8A39B;
+           background: #3B1414; padding: 4px 10px; border-radius: 99px; }
+  .pulse i { width: 8px; height: 8px; border-radius: 50%; background: #D9705A; animation: assasPulse 1.4s infinite; }
+  .verdict { margin-top: 14px; padding: 10px 12px; border-radius: 10px; font-size: 13px; }
+  .verdict.bad { background: #3B1414; color: #E8A39B; } .verdict.warn { background: #332A12; color: #D9C27A; }
+
+  @keyframes assasRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes assasPulse { 0% { box-shadow: 0 0 0 0 rgba(217,112,90,.7); } 70% { box-shadow: 0 0 0 10px rgba(217,112,90,0); } 100% { box-shadow: 0 0 0 0 rgba(217,112,90,0); } }
+  @media (max-width: 900px) { .span-8, .span-6, .span-4 { grid-column: span 12; } .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+</style>
+
+<section class="assas-dash">
+  <h2>Security dashboard</h2>
+  <p class="sub">Visual overview of authentication activity and detected threats.</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">Events analyzed</div><div class="value gold" data-count="{{ charts.totals.events }}">0</div></div>
+    <div class="kpi"><div class="label">Failed logins</div><div class="value red" data-count="{{ charts.totals.failed }}">0</div></div>
+    <div class="kpi"><div class="label">Successful logins</div><div class="value green" data-count="{{ charts.totals.success }}">0</div></div>
+    <div class="kpi">
+      <div class="label">Failure rate</div>
+      <div class="value amber"><span data-count="{{ charts.totals.fail_rate }}">0</span>%</div>
+      <div class="meter"><span data-width="{{ charts.totals.fail_rate }}"></span></div>
+    </div>
+  </div>
+
+  <div class="assas-grid">
+    <div class="assas-card span-8">
+      <h3>Attack timeline</h3>
+      <p class="hint">Failed vs successful logins over time. The red spike is the attack.</p>
+      <div class="chart-box"><canvas id="timelineChart"></canvas></div>
+    </div>
+
+    {% if charts.attacker %}
+    <div class="assas-card attacker span-4">
+      <span class="pulse"><i></i> Main attacker</span>
+      <div class="ip">{{ charts.attacker.ip }}</div>
+      <div class="row"><span>Failed attempts</span><strong>{{ charts.attacker.failed }}</strong></div>
+      <div class="row"><span>Successful logins</span><strong>{{ charts.attacker.success }}</strong></div>
+      <div class="row"><span>Targeted users</span><strong>{{ charts.attacker.users | join(", ") }}</strong></div>
+      <div class="row"><span>First seen</span><strong>{{ charts.attacker.first }}</strong></div>
+      <div class="row"><span>Last seen</span><strong>{{ charts.attacker.last }}</strong></div>
+      {% if charts.attacker.success > 0 %}
+      <div class="verdict bad">Attacker logged in after failed attempts: account may be compromised.</div>
+      {% else %}
+      <div class="verdict warn">Brute force attempt, no successful login detected.</div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="assas-card span-4">
+      <h3>Findings by severity</h3>
+      <p class="hint">How serious the detected activity is.</p>
+      <div class="chart-box small"><canvas id="severityChart"></canvas></div>
+    </div>
+
+    <div class="assas-card span-4">
+      <h3>Top attacking IPs</h3>
+      <p class="hint">Sources with the most failed logins.</p>
+      <div class="chart-box small"><canvas id="ipChart"></canvas></div>
+    </div>
+
+    <div class="assas-card span-4">
+      <h3>Most targeted accounts</h3>
+      <p class="hint">Usernames attackers tried.</p>
+      <div class="chart-box small"><canvas id="userChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ url_for('static', filename='chart.umd.min.js') }}"></script>
+<script>
+(function () {
+  const data = {{ charts | tojson }};
+  const RED = "#D9705A", GREEN = "#A8C08A", GOLD = "#C9A24D", SLATE = "#4A3828", GRID = "#2A1F16";
+
+  Chart.defaults.color = "#8B6A4A";
+  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.tooltip.backgroundColor = "#0E0B08";
+  Chart.defaults.plugins.tooltip.borderColor = "#3A2A1E";
+  Chart.defaults.plugins.tooltip.borderWidth = 1;
+  Chart.defaults.plugins.tooltip.padding = 10;
+
+  // Animated counters
+  document.querySelectorAll("[data-count]").forEach(el => {
+    const target = Number(el.dataset.count) || 0, start = performance.now();
+    (function tick(now) {
+      const p = Math.min((now - start) / 1200, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  });
+  document.querySelectorAll("[data-width]").forEach(el => {
+    setTimeout(() => { el.style.width = el.dataset.width + "%"; }, 150);
+  });
+
+  function fade(ctx, color) {
+    const g = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight || 280);
+    g.addColorStop(0, color + "66");
+    g.addColorStop(1, color + "00");
+    return g;
+  }
+
+  // 1. Timeline
+  const tl = document.getElementById("timelineChart").getContext("2d");
+  const peak = Math.max(...data.timeline.failed, 0);
+  new Chart(tl, {
+    type: "line",
+    data: {
+      labels: data.timeline.labels,
+      datasets: [
+        { label: "Failed", data: data.timeline.failed, borderColor: RED, backgroundColor: fade(tl, RED),
+          fill: true, tension: 0.35, borderWidth: 2.5,
+          pointRadius: data.timeline.failed.map(v => v === peak && peak > 0 ? 6 : 0),
+          pointBackgroundColor: RED, pointBorderColor: "#1A140F", pointBorderWidth: 2 },
+        { label: "Successful", data: data.timeline.success, borderColor: GREEN, backgroundColor: fade(tl, GREEN),
+          fill: true, tension: 0.35, borderWidth: 2, pointRadius: 0, borderDash: [6, 4] }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
+      animation: { duration: 1400, easing: "easeOutQuart" },
+      scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: GRID }, ticks: { precision: 0 } } },
+      plugins: { legend: { position: "top", align: "end" } }
+    }
+  });
+
+  // 2. Severity doughnut with total in the middle
+  const total = data.severity.values.reduce((a, b) => a + b, 0);
+  new Chart(document.getElementById("severityChart"), {
+    type: "doughnut",
+    data: { labels: data.severity.labels,
+            datasets: [{ data: data.severity.values, backgroundColor: ["#C4574A", "#E0A86A", "#D9C27A", "#A8C08A"],
+                         borderColor: "#1A140F", borderWidth: 3, hoverOffset: 8 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: "68%",
+               animation: { animateRotate: true, duration: 1400 },
+               plugins: { legend: { position: "bottom" } } },
+    plugins: [{ id: "center", afterDraw(chart) {
+      const { ctx, chartArea: a } = chart, x = (a.left + a.right) / 2, y = (a.top + a.bottom) / 2;
+      ctx.save(); ctx.textAlign = "center"; ctx.fillStyle = "#EDE3D3";
+      ctx.font = "700 30px " + Chart.defaults.font.family; ctx.fillText(total, x, y + 4);
+      ctx.fillStyle = "#6E5640"; ctx.font = "12px " + Chart.defaults.font.family; ctx.fillText("findings", x, y + 24);
+      ctx.restore();
+    } }]
+  });
+
+  // 3 & 4. Horizontal bars: top item highlighted
+  function hbar(id, block, highlight) {
+    new Chart(document.getElementById(id), {
+      type: "bar",
+      data: { labels: block.labels,
+              datasets: [{ label: "Failed attempts", data: block.values,
+                           backgroundColor: block.values.map((v, i) => i === 0 ? highlight : SLATE),
+                           borderRadius: 6, maxBarThickness: 22 }] },
+      options: { indexAxis: "y", responsive: true, maintainAspectRatio: false,
+                 animation: { duration: 1200, easing: "easeOutQuart" },
+                 scales: { x: { beginAtZero: true, grid: { color: GRID }, ticks: { precision: 0 } },
+                           y: { grid: { display: false } } },
+                 plugins: { legend: { display: false } } }
+    });
+  }
+  hbar("ipChart", data.top_ips, RED);
+  hbar("userChart", data.top_users, GOLD);
+})();
+</script>
