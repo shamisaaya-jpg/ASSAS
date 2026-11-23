@@ -1,2 +1,7 @@
-Flask
-pandas
+Flask>=3.1,<4
+Flask-Login>=0.6.3,<1
+Werkzeug>=3.1,<4
+python-dotenv>=1.0,<2
+pandas>=2.2,<4
+psycopg2-binary>=2.9,<3
+opensearch-py>=2.6,<4

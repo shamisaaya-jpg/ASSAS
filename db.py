@@ -43,6 +43,11 @@ CREATE TABLE IF NOT EXISTS alerts (
     reason      TEXT,
     created_at  TIMESTAMP DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_alerts_analysis ON alerts (analysis_id);
+CREATE INDEX IF NOT EXISTS idx_alerts_severity ON alerts (severity);
+CREATE INDEX IF NOT EXISTS idx_alerts_created ON alerts (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_analyses_created ON analyses (created_at DESC);
 """
 
 
@@ -135,11 +140,28 @@ def list_alerts(limit=100, severity=None):
     if severity:
         query += " WHERE al.severity = %s"
         params.append(severity.upper())
-    query += """ ORDER BY al.created_at DESC,
+    query += """ ORDER BY al.created_at DESC, al.analysis_id DESC,
                  CASE al.severity WHEN 'CRITICAL' THEN 0 WHEN 'HIGH' THEN 1
                                   WHEN 'MEDIUM' THEN 2 ELSE 3 END
                  LIMIT %s"""
     params.append(limit)
     with db_cursor() as cur:
         cur.execute(query, params)
+        return cur.fetchall()
+
+
+def get_analysis(analysis_id):
+    with db_cursor() as cur:
+        cur.execute("SELECT * FROM analyses WHERE id = %s", (analysis_id,))
+        return cur.fetchone()
+
+
+def get_alerts_for_analysis(analysis_id):
+    with db_cursor() as cur:
+        cur.execute(
+            """SELECT * FROM alerts WHERE analysis_id = %s
+               ORDER BY CASE severity WHEN 'CRITICAL' THEN 0 WHEN 'HIGH' THEN 1
+                                      WHEN 'MEDIUM' THEN 2 ELSE 3 END, id""",
+            (analysis_id,),
+        )
         return cur.fetchall()

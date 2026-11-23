@@ -92,7 +92,10 @@
       <a href="{{ url_for('home') }}" class="active">Analyze</a>
       <a href="{{ url_for('search') }}">Search</a>
       <a href="{{ url_for('history') }}">History</a>
-      <a href="{{ url_for('logout') }}">Logout ({{ current_user.username }})</a>
+      <form action="{{ url_for('logout') }}" method="post" style="display:inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" style="background:none;border:0;padding:0;margin-left:22px;cursor:pointer;color:#8B6A4A;font:inherit;font-size:14px">Logout ({{ current_user.username }})</button>
+      </form>
     </nav>
   </header>
 
@@ -101,6 +104,7 @@
       <h2>Analyze log files</h2>
       <p class="hint">Upload a Linux auth log, a Windows Security CSV, or a CSV/JSON file to scan for suspicious activity.</p>
       <form class="upload" action="{{ url_for('analyze') }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="file">
           <input type="file" name="logfile" accept=".csv,.json,.log,.txt" required>
         </div>
@@ -124,7 +128,7 @@
     <div class="card">
       <div class="head-row">
         <h2>Detected findings</h2>
-        <a class="link" href="{{ url_for('download_report') }}">Download CSV report</a>
+        <a class="link" href="{{ url_for('download_report', analysis_id=analysis_id) }}">Download CSV report</a>
       </div>
       <table>
         <tr><th>Timestamp</th><th>User</th><th>IP</th><th>Event</th><th>Severity</th><th>Reason</th></tr>

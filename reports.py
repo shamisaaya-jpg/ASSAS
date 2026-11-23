@@ -1,5 +1,11 @@
-from pathlib import Path
-import pandas as pd
+import csv
+import io
+
+REPORT_COLUMNS = ["timestamp", "user", "ip", "event", "severity", "reason"]
+
+# Cells starting with these characters are run as formulas by Excel / LibreOffice.
+# Log content is attacker-controlled (a username like =HYPERLINK(...)), so neutralize them.
+_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
 
 
 def generate_summary(threats):
@@ -24,18 +30,28 @@ def generate_summary(threats):
     }
 
 
-def export_report(threats, output_path="reports/threat_report.csv"):
-    """Export detected threats to a CSV report."""
-    path = Path(output_path)
-    path.parent.mkdir(parents=True, exist_ok=True)
+def safe_cell(value):
+    """Prevent CSV / formula injection when the report is opened in a spreadsheet."""
+    text = "" if value is None else str(value)
+    return "'" + text if text.startswith(_FORMULA_PREFIXES) else text
 
-    if threats is None:
-        threats = pd.DataFrame(
-            columns=[
-                "timestamp", "user", "ip",
-                "event", "severity", "reason"
-            ]
-        )
 
-    threats.to_csv(path, index=False, encoding="utf-8-sig")
-    return str(path)
+def build_report_csv(alerts):
+    """Build the CSV report (bytes, UTF-8 with BOM for Excel) from alert rows.
+
+    `alerts` is an iterable of dicts using either the detection column names
+    (timestamp, user...) or the database ones (event_time, username...).
+    """
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(REPORT_COLUMNS)
+    for alert in alerts:
+        writer.writerow([safe_cell(v) for v in (
+            alert.get("timestamp", alert.get("event_time")),
+            alert.get("user", alert.get("username")),
+            alert.get("ip"),
+            alert.get("event"),
+            alert.get("severity"),
+            alert.get("reason"),
+        )])
+    return buffer.getvalue().encode("utf-8-sig")

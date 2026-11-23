@@ -46,6 +46,7 @@
 </head>
 <body>
   <form class="card" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="brand">
       <img src="{{ url_for('static', filename='owl.png') }}" alt="ASSAS owl" class="logo">
       <h1>ASSAS</h1>

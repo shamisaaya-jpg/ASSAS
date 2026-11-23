@@ -11,6 +11,10 @@ def _top(series, n=5):
     }
 
 
+def _fmt(ts):
+    return ts.strftime("%Y-%m-%d %H:%M:%S")
+
+
 def build_chart_data(logs, threats):
     """Prepare all the numbers the dashboard charts need."""
     data = logs.copy()
@@ -68,13 +72,14 @@ def build_chart_data(logs, threats):
     if top_ips["labels"]:
         ip = top_ips["labels"][0]
         rows = data[data["ip"].astype(str) == ip]
+        times = timestamps[rows.index]
         attacker = {
             "ip": ip,
             "failed": int(is_failed[rows.index].sum()),
             "success": int(is_success[rows.index].sum()),
             "users": sorted({str(u) for u in rows["user"] if str(u).strip()}),
-            "first": str(rows["timestamp"].iloc[0]),
-            "last": str(rows["timestamp"].iloc[-1]),
+            "first": _fmt(times.min()) if times.notna().any() else str(rows["timestamp"].iloc[0]),
+            "last": _fmt(times.max()) if times.notna().any() else str(rows["timestamp"].iloc[-1]),
         }
 
     total = len(data)

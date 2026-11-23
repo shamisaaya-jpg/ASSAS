@@ -23,6 +23,32 @@ ADDRESS = re.compile(r"(?:Source Network Address|Adresse r[ée]seau source):\s*(
 GROUP = re.compile(r"Group Name:\s*([^\r\n]+)", re.IGNORECASE)
 
 
+ISO_DATE = re.compile(r"^\s*\d{4}-\d{2}-\d{2}")
+
+
+def _naive(series):
+    return series.dt.tz_localize(None)
+
+
+def parse_timestamps(values):
+    """Parse Windows timestamps.
+
+    The PowerShell export writes ISO dates (2026-01-05 10:00:00) while a French
+    Event Viewer export writes day first (05/01/2026 10:00:00). dayfirst=True
+    must only be used for the second kind: applied to ISO strings it swaps day
+    and month (2026-01-05 would become 1 May).
+    """
+    text = values.astype(str)
+    iso = text.str.match(ISO_DATE)
+    parsed = pd.Series(pd.NaT, index=values.index, dtype="datetime64[ns]")
+    if iso.any():
+        parsed[iso] = _naive(pd.to_datetime(text[iso], errors="coerce", format="mixed", utc=True))
+    if (~iso).any():
+        parsed[~iso] = _naive(pd.to_datetime(text[~iso], errors="coerce", dayfirst=True,
+                                             format="mixed", utc=True))
+    return parsed
+
+
 def _col(df, *names):
     """Find a column whatever its exact spelling (EventID, Event ID, Id...)."""
     wanted = {n.replace(" ", "").lower() for n in names}
@@ -97,8 +123,5 @@ def parse_windows_events(df):
     if result.empty:
         raise ValueError("No supported Windows security events (4624, 4625, 4720, 4732...) found.")
 
-    result["timestamp"] = (
-        pd.to_datetime(result["timestamp"], errors="coerce", dayfirst=True, format="mixed")
-        .dt.strftime("%Y-%m-%d %H:%M:%S")
-    )
+    result["timestamp"] = parse_timestamps(result["timestamp"]).dt.strftime("%Y-%m-%d %H:%M:%S")
     return result

@@ -70,7 +70,10 @@
       <a href="{{ url_for('home') }}">Analyze</a>
       <a href="{{ url_for('search') }}" class="active">Search</a>
       <a href="{{ url_for('history') }}">History</a>
-      <a href="{{ url_for('logout') }}">Logout ({{ current_user.username }})</a>
+      <form action="{{ url_for('logout') }}" method="post" style="display:inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" style="background:none;border:0;padding:0;margin-left:22px;cursor:pointer;color:#8B6A4A;font:inherit;font-size:14px">Logout ({{ current_user.username }})</button>
+      </form>
     </nav>
   </header>
 
@@ -95,6 +98,13 @@
           <select name="status">
             <option value="">All</option>
             {% for s in facets.statuses %}<option value="{{ s }}" {{ 'selected' if f.status == s }}>{{ s }}</option>{% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>System</label>
+          <select name="os_name">
+            <option value="">All</option>
+            {% for o in facets.systems %}<option value="{{ o }}" {{ 'selected' if f.os_name == o }}>{{ o }}</option>{% endfor %}
           </select>
         </div>
         <div><label>From</label><input type="datetime-local" name="date_from" value="{{ f.date_from }}"></div>
