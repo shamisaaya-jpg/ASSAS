@@ -1,6 +1,8 @@
 import pandas as pd
 
 COLUMNS = ["timestamp", "user", "ip", "event", "severity", "reason"]
+ACCOUNT_EVENTS = {"account_created", "account_enabled", "account_deleted",
+                  "account_locked", "group_add", "logoff"}
 SEVERITY_ORDER = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
 
 
@@ -33,6 +35,8 @@ def detect_threats(df, failed_threshold=5, window_minutes=5,
       4. Sudo abuse         MEDIUM    >= sudo_threshold failed sudo for one user in window_minutes
       5. Isolated failures  LOW       failed attempts below the thresholds
       6. Log level          CRITICAL / MEDIUM for critical, fatal or error events
+      7. Account changes    CRITICAL / HIGH / MEDIUM for account creation (after a
+                            compromise = backdoor), admin group adds, lockouts, deletions
     """
     if df is None or df.empty:
         return pd.DataFrame(columns=COLUMNS)
@@ -62,8 +66,11 @@ def detect_threats(df, failed_threshold=5, window_minutes=5,
         & data["status"].str.contains(r"success|successful|accepted", case=False, regex=True)
     )
     is_sudo = data["event"].str.contains("sudo", case=False)
+    # Account management events can carry status "failed" too (e.g. a lockout)
+    # but they are not login attempts: they must not feed the brute-force rules.
+    is_account_event = data["event"].isin(ACCOUNT_EVENTS)
 
-    login_failures = data[failed & ~is_sudo & (data["ip"] != "")]
+    login_failures = data[failed & ~is_sudo & ~is_account_event & (data["ip"] != "")]
     flagged_ips = set()
     compromise_times = []
 
@@ -138,6 +145,13 @@ def detect_threats(df, failed_threshold=5, window_minutes=5,
             "HIGH" if privileged else "MEDIUM",
             f"'{row['user']}' added to the Administrators group (privilege escalation)"
             if privileged else f"'{row['user']}' added to a security group")
+
+    for _, row in data[data["event"] == "account_locked"].iterrows():
+        add(row["timestamp"], row["user"], row["ip"], "account_locked", "MEDIUM",
+            f"Account '{row['user']}' locked out after repeated failed logons")
+    for _, row in data[data["event"] == "account_deleted"].iterrows():
+        add(row["timestamp"], row["user"], row["ip"], "account_deleted", "MEDIUM",
+            f"User account deleted: '{row['user']}'")
 
     # ---------- Rule 6: log level ----------
     for _, row in data[data["level"].str.contains(r"critical|fatal", case=False, regex=True)].iterrows():

@@ -2,7 +2,7 @@
 # Run in PowerShell as Administrator:
 #   powershell -ExecutionPolicy Bypass -File .\export_windows_logs.ps1
 
-$ids = 4624, 4625, 4720, 4726, 4732, 4740
+$ids = 4624, 4625, 4720, 4722, 4726, 4728, 4732, 4740
 $out = "$env:USERPROFILE\Desktop\windows_security.csv"
 
 Get-WinEvent -FilterHashtable @{ LogName = 'Security'; Id = $ids; StartTime = (Get-Date).AddDays(-7) } -ErrorAction SilentlyContinue |

@@ -5,10 +5,10 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: assas
-      POSTGRES_PASSWORD: assas_pass
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-assas_pass}
       POSTGRES_DB: assas
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"   # local only: never expose the database
     volumes:
       - assas_pgdata:/var/lib/postgresql/data
 
@@ -22,7 +22,7 @@ services:
       - DISABLE_INSTALL_DEMO_CONFIG=true
       - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
-      - "9200:9200"
+      - "127.0.0.1:9200:9200"   # local only: the security plugin is disabled
     volumes:
       - assas_osdata:/usr/share/opensearch/data
 

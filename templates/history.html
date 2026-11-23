@@ -50,7 +50,10 @@
       <a href="{{ url_for('home') }}">Analyze</a>
       <a href="{{ url_for('search') }}">Search</a>
       <a href="{{ url_for('history') }}" class="active">History</a>
-      <a href="{{ url_for('logout') }}">Logout ({{ current_user.username }})</a>
+      <form action="{{ url_for('logout') }}" method="post" style="display:inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" style="background:none;border:0;padding:0;margin-left:22px;cursor:pointer;color:#8B6A4A;font:inherit;font-size:14px">Logout ({{ current_user.username }})</button>
+      </form>
     </nav>
   </header>
 
@@ -62,7 +65,7 @@
         {% for a in analyses %}
         <tr>
           <td class="num">{{ a.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
-          <td>{{ a.filename }}</td>
+          <td>{{ a.filename }} <a class="muted" href="{{ url_for('download_report', analysis_id=a.id) }}" title="Download CSV report">&#8681; CSV</a></td>
           <td>{{ a.analyst or "-" }}</td>
           <td class="num">{{ a.total }}</td>
           <td class="num">{{ a.critical }}</td>

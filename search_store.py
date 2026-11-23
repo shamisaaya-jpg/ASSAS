@@ -1,5 +1,7 @@
 """OpenSearch storage for ASSAS: keeps every raw log event and searches them."""
+import logging
 import os
+import re
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -35,7 +37,8 @@ _client = None
 def client():
     global _client
     if _client is None:
-        _client = OpenSearch(OPENSEARCH_URL, timeout=10)
+        # Fail fast when OpenSearch is down instead of retrying for ~40 s per request.
+        _client = OpenSearch(OPENSEARCH_URL, timeout=5, max_retries=1, retry_on_timeout=False)
     return _client
 
 
@@ -81,8 +84,15 @@ def index_logs(logs, source_file, analysis_id=None):
                 },
             }
 
-    stored, _errors = helpers.bulk(client(), actions(), refresh=True, raise_on_error=False)
+    stored, errors = helpers.bulk(client(), actions(), refresh=True, raise_on_error=False)
+    if errors:
+        logging.getLogger(__name__).warning("%d log events were rejected by OpenSearch", len(errors))
     return stored
+
+
+def _escape_wildcard(value):
+    """User input is matched literally: * ? and \\ would otherwise be wildcard syntax."""
+    return re.sub(r"([*?\\])", r"\\\1", value)
 
 
 def build_query(user="", ip="", event="", status="", os_name="", text="",
@@ -90,9 +100,9 @@ def build_query(user="", ip="", event="", status="", os_name="", text="",
     """Turn the search form into an OpenSearch query."""
     filters = []
     if user:
-        filters.append({"wildcard": {"user": {"value": f"*{user}*", "case_insensitive": True}}})
+        filters.append({"wildcard": {"user": {"value": f"*{_escape_wildcard(user)}*", "case_insensitive": True}}})
     if ip:
-        filters.append({"wildcard": {"ip": {"value": f"*{ip}*"}}})
+        filters.append({"wildcard": {"ip": {"value": f"*{_escape_wildcard(ip)}*"}}})
     if event:
         filters.append({"term": {"event": event}})
     if status:
