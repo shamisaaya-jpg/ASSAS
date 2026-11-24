@@ -1,0 +1,44 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "properties": {
+      "timestamp": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||strict_date_optional_time||epoch_millis"
+      },
+      "user": {
+        "type": "keyword"
+      },
+      "ip": {
+        "type": "keyword"
+      },
+      "event": {
+        "type": "keyword"
+      },
+      "status": {
+        "type": "keyword"
+      },
+      "level": {
+        "type": "keyword"
+      },
+      "os": {
+        "type": "keyword"
+      },
+      "message": {
+        "type": "text"
+      },
+      "source_file": {
+        "type": "keyword"
+      },
+      "analysis_id": {
+        "type": "integer"
+      },
+      "indexed_at": {
+        "type": "date"
+      }
+    }
+  }
+}
